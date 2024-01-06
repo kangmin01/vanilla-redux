@@ -1,61 +1,18 @@
-import { createStore } from "redux";
+import ReactDOM from "react-dom/client";
+import Home from "./pages/Home";
+import Detail from "./pages/Detail";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-const form = document.querySelector("form");
-const input = document.querySelector("input");
-const ul = document.querySelector("ul");
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/:id",
+    element: <Detail />,
+  },
+]);
 
-const ADD_TODO = "ADD_TODO";
-const DELETE_TODO = "DELETE_TODO";
-
-const addToDo = (text, id) => ({ type: ADD_TODO, text, id });
-const deleteToDo = (id) => ({ type: DELETE_TODO, id });
-
-const reducer = (state = [], action) => {
-  switch (action.type) {
-    case ADD_TODO:
-      return [{ text: action.text, id: action.id }, ...state];
-    case DELETE_TODO:
-      return state.filter((todo) => todo.id != action.id);
-    default:
-      return state;
-  }
-};
-
-const store = createStore(reducer);
-
-store.subscribe(() => console.log(store.getState()));
-
-const dispatchAddToDo = (text, id) => {
-  store.dispatch(addToDo(text, id));
-};
-
-const dispatchDeleteToDo = (e) => {
-  const id = e.target.parentNode.id;
-  store.dispatch(deleteToDo(id));
-};
-
-const paintToDos = () => {
-  const toDos = store.getState();
-  ul.innerHTML = "";
-  toDos.forEach((toDo) => {
-    const li = document.createElement("li");
-    const btn = document.createElement("button");
-    btn.innerText = "🗑️";
-    btn.addEventListener("click", dispatchDeleteToDo);
-    li.id = toDo.id;
-    li.innerText = toDo.text;
-    li.appendChild(btn);
-    ul.appendChild(li);
-  });
-};
-
-store.subscribe(paintToDos);
-
-const onSubmit = (e) => {
-  e.preventDefault();
-  const toDo = input.value;
-  input.value = "";
-  dispatchAddToDo(toDo, Date.now());
-};
-
-form.addEventListener("submit", onSubmit);
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<RouterProvider router={router} />);
