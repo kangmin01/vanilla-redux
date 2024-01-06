@@ -16,28 +16,11 @@ const countModifier = (count = 0, action) => {
 
 const countStore = createStore(countModifier);
 
-countStore.dispatch({ type: "PLUS" });
-countStore.dispatch({ type: "PLUS" });
-countStore.dispatch({ type: "MINUS" });
-console.log(countStore.getState());
-
-let count = 0;
-
-number.innerText = count;
-
-const updateText = () => {
-  number.innerText = count;
+const onChange = () => {
+  number.innerText = countStore.getState();
 };
 
-const handlePlus = () => {
-  count = count + 1;
-  updateText();
-};
+countStore.subscribe(onChange);
 
-const handleMinus = () => {
-  count = count - 1;
-  updateText();
-};
-
-plus.addEventListener("click", handlePlus);
-minus.addEventListener("click", handleMinus);
+plus.addEventListener("click", () => countStore.dispatch({ type: "PLUS" }));
+minus.addEventListener("click", () => countStore.dispatch({ type: "MINUS" }));
