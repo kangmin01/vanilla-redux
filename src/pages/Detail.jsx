@@ -1,3 +1,14 @@
-export default function Detail() {
-  return "Detail";
+import { connect } from "react-redux";
+import { useParams } from "react-router-dom";
+
+function Detail({ toDos }) {
+  const { id } = useParams();
+  const toDo = toDos.find((toDo) => toDo.id == id);
+  return <h1>{toDo?.text}</h1>;
 }
+
+function mapStateToProps(state) {
+  return { toDos: state };
+}
+
+export default connect(mapStateToProps)(Detail);
